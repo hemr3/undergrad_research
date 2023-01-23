@@ -12,16 +12,23 @@ First things first, the necessaries of what you need to do this research:
         
 --> once you have Ubuntu, please download several packages to the computer. You can do this via sudo apt install (make sure you are the root user on your PC)
      perl: sudo apt install perl
+     
      build-essential: sudo apt install build-essential
+     
      gcc: sudo apt-get install manpages-dev
+     
      libsdl2-dev: sudo apt-get install libsdl2-dev
+     
      gzip: sudo apt -y install gzip
+     
      coreutils: sudo apt -y install coreutils
+     
      bedtools: https://bedtools.readthedocs.io/en/latest/content/installation.html
+     
      VCFtools: https://vcftools.github.io/examples.html
      
-     To verify that these are all installed do: [package] --version
-     if they are installed correctly, your PC should spit out the package name plus a version number. 
+  To verify that these are all installed do: [package] --version
+  if they are installed correctly, your PC should spit out the package name plus a version number. 
      
 --> then download the .bed files for your specific Neanderthal from http://ftp.eva.mpg.de/neandertal/
     Maya: Chagyrskaya 8 (http://ftp.eva.mpg.de/neandertal/Chagyrskaya/FilterBed/)
