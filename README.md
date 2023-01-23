@@ -50,7 +50,7 @@ First things first, the necessaries of what you need to do this research:
     
   This is as I've found that these are DIFFERENT from the human versions of the genes in the Chagyrskaya Neanderthal, so I want to replicate research and then see if other Neas show the same differentiation.
     
-    Look them up on https://www.genecards.org/ for a rough idea of what they do. What do they all have in common, for instance?
+  Look them up on https://www.genecards.org/ for a rough idea of what they do. What do they all have in common, for instance?
     
 --> look at the file working_pipeline in this repository and have a go! 
 
