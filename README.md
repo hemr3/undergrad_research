@@ -27,7 +27,10 @@ First things first, the necessaries of what you need to do this research:
      
      VCFtools: https://vcftools.github.io/examples.html
      
-  To verify that these are all installed do: [package] --version
+  To verify that these are all installed do: 
+  
+     [package] --version
+  
   if they are installed correctly, your PC should spit out the package name plus a version number. 
      
 --> then download the .bed files for your specific Neanderthal from http://ftp.eva.mpg.de/neandertal/
@@ -45,11 +48,11 @@ First things first, the necessaries of what you need to do this research:
     
 --> the first three genes we'll be looking at are: GMBE1, TRAIP, RPN1.
     
-    This is as I've found that these are DIFFERENT from the human versions of the genes in the Chagyrskaya Neanderthal, so I want to replicate research and then see if other Neas show the same differentiation.
+  This is as I've found that these are DIFFERENT from the human versions of the genes in the Chagyrskaya Neanderthal, so I want to replicate research and then see if other Neas show the same differentiation.
     
     Look them up on https://www.genecards.org/ for a rough idea of what they do. What do they all have in common, for instance?
     
---> look at the file undergrad_work in this repository and have a go! 
+--> look at the file working_pipeline in this repository and have a go! 
 
 
 If you're having difficulties with this - no problems! But what I'd like you to do is to try and solve the issue on your own. Searching the error in google is an absolutely excellent way to find out how to get around them (but be careful with chmod commands, they can destroy your file structure, and there's no way to get it back). Stackoverflow, stackexchange, and BioStars are full of people who will just give you the solutions at the drop of a hat. If this doesn't work, don't hesitate to get in contact with me! 
