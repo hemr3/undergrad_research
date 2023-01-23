@@ -1,0 +1,74 @@
+wget ftp://ftp.sanger.ac.uk/pub/gencode/release_15/gencode.v15.annotation.gtf.gz
+  #get the gencode gtf file which includes gene names
+
+gunzip ~/Downloads/gencode.v41.annotation.gtf.gz 
+  #unzip the file (aka decompress)
+
+gtf2bed < ~/Downloads/gencode.v41.annotation.gtf > ~/Downloads/gencode.bed
+  #easy way to convert between gtf and bed formats using bedops
+
+grep "exon" ~/Downloads/gencode.bed > ~/Downloads/gencode.exons.bed
+  #only find the exons - can be usd for any specific thing in files
+
+awk '{print $1,$2,$3,$17}' ~/Downloads/gencode.exons.bed > ~/Downloads/cut_gencode_exons.bed
+  #for the bed file - only includes chr, start, stop, gene name
+
+grep "chr3" ~/Downloads/cut_gencode_exons.bed > ~/Downloads/chr3_cut_gencode_exons.bed
+  #choosing a specific chromosome - skip step if whole genome needed
+  #can also use whatever chr your heart (or research) desires
+
+awk '{$1=3 ; print ;}' ~/chr3_cut_gencode_exons.bed > ~/3_cut_gencoes_exons.bed
+  #changing the 'chr3' to '3' to match other bedfiles. technically it is either or but can create confusion with 'chr'
+  #h/ever this creates a file that is space delimited and bedfiles technically need to be TAB DELIMITED
+  
+awk -v OFS='\t' '{$1=$1}1' ~/3_cut_gencodes_exons.bed > ~/tab_3_cut_gencodes_exons.bed
+  #this changes the space delimited file to a tab delimited one
+  
+bedtools sort -i ~/tab_3_cut_gencodes_exons.bed > ~/sorted_tab_3_cut_gencodes_exons.bed
+  #make sure that all bedfiles are sorted before you begin messing with them. if not will definitely create issues down the line
+  #also make sure that all are decompressed! otherwise issues ensue
+  
+ 
+ #### the next step is to download the .bed file from your specific specimen from: http://ftp.eva.mpg.de/neandertal/
+ #### this will take a while
+ 
+bedmap --echo --echo-map-id-uniq ~/chr3_mask.bed ~/sapiens_files/sorted_tab_3_cut_gencodes_exons.bed > ~/collated.bed 
+	#using all of this, you can intersect two bedfiles to see where the same genes are - which is 	what the above demonstrates with the chag CHR3 files and this complete human one
+	#bedops toolkit
+	
+
+####creating working .bed files with the gene names for the neanderthal CHR
+
+#bed files created in the above steps have a | delimiter rather than a tab delimiter. 
+#this kinda was fixed earlier but needs to be fixed again, as bedops does something funky.
+#| delimited files are less well used - most programs use tab delimiters. you can adapt the code to deal with | delimiters, but if it ain't broke, don't fix it. 
+
+sed 's/|/\t/g' ~/gene_names_chag3.txt > ~/only_names_chag3.txt
+
+#then remove the stop position
+awk '{print $2}' ~/only_names_chag3.txt > ~/only_names_chag3.txt
+
+#remove duplicates of genes that appear
+awk '!x[$0]++' ~/only_names_chag3.txt > only_names_chag3.txt
+
+#remove lines that have more than one gene name on them (without removing Ensembl gene lines)
+awk 'length<19' ~/only_names_chag3.txt > ~/try2_only_names.txt
+
+#remove the semicolon and the quote marks:
+cat ~/try2_only_names.txt | tr -d '"' | tr -d ';' > only_names.txt
+
+#take only Ensembl gene lines to convert:
+cat ~/only_names_chag3.txt | grep '^EN' > ~/ensembl_chag3.txt
+	#THE ABOVE STEP IS NOT ENTIRELY NECESSARY, DO AT YOUR OWN DISGRESSION
+
+
+#for specific genes - you first need to create a bed file with the format chrom number  start stop for that particular gene
+#this can be found by looking on the .bed files made and essentially just copying/grepping them into a new file. honestly, I just did ctrl+f and copied to a new document. much easier. 
+#once done, use the VCFs and this new .bed file to create a new VCF with only these gene positions in:
+vcftools --gzvcf ~/Documents/chag_vcfs/chr3.noRB.vcf.gz --bed ~/Documents/traip.bed --out ~/Documents/traip_chr3_chag --recode --keep-INFO-all
+
+####for protein seq and visualisation....
+#we will discuss this before you do it!!
+
+awk '{print $1,$2,$3,$4,$5}' ~specific_gene_vcfs/foxp1_chr3_chag.vcf > ~/specific_gene_vcfs/foxp1_first5.txt
+#this removes all but necessary columns from file needed for SeqTailor. have to manually delete the top bit though
