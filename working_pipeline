@@ -32,7 +32,7 @@ bedtools sort -i ~/tab_3_cut_gencodes_exons.bed > ~/sorted_tab_3_cut_gencodes_ex
  #### the next step is to download the .bed file from your specific specimen from: http://ftp.eva.mpg.de/neandertal/
  #### this will take a while
  
-bedmap --echo --echo-map-id-uniq ~/chr3_mask.bed ~/sapiens_files/sorted_tab_3_cut_gencodes_exons.bed > ~/collated.bed 
+bedmap --echo --echo-map-id-uniq ~/chr3_mask.bed ~/sapiens_files/sorted_tab_3_cut_gencodes_exons.bed > ~/collated.bed #or .txt file, but .bed file is easier when you're making the gene.bed files
 	#using all of this, you can intersect two bedfiles to see where the same genes are - which is 	what the above demonstrates with the chag CHR3 files and this complete human one
 	#bedops toolkit
 	
@@ -43,10 +43,10 @@ bedmap --echo --echo-map-id-uniq ~/chr3_mask.bed ~/sapiens_files/sorted_tab_3_cu
 #this kinda was fixed earlier but needs to be fixed again, as bedops does something funky.
 #| delimited files are less well used - most programs use tab delimiters. you can adapt the code to deal with | delimiters, but if it ain't broke, don't fix it. 
 
-sed 's/|/\t/g' ~/gene_names_chag3.txt > ~/only_names_chag3.txt
+sed 's/|/\t/g' ~/collated.bed > ~/collated.bed
 
 #then remove the stop position
-awk '{print $2}' ~/only_names_chag3.txt > ~/only_names_chag3.txt
+awk '{print $2}' ~/collated.bed > ~/only_names_chag3.txt #or .bed file!!
 
 #remove duplicates of genes that appear
 awk '!x[$0]++' ~/only_names_chag3.txt > only_names_chag3.txt
@@ -58,12 +58,14 @@ awk 'length<19' ~/only_names_chag3.txt > ~/try2_only_names.txt
 cat ~/try2_only_names.txt | tr -d '"' | tr -d ';' > only_names.txt
 
 #take only Ensembl gene lines to convert:
+#not necessarily necessary
 cat ~/only_names_chag3.txt | grep '^EN' > ~/ensembl_chag3.txt
 	#THE ABOVE STEP IS NOT ENTIRELY NECESSARY, DO AT YOUR OWN DISGRESSION
 
-
 #for specific genes - you first need to create a bed file with the format chrom number  start stop for that particular gene
-#this can be found by looking on the .bed files made and essentially just copying/grepping them into a new file. honestly, I just did ctrl+f and copied to a new document. much easier. 
+  #(this you can do with the collated.bed file!!)
+#this can be found by looking on the .bed files made and essentially just copying/grepping them into a new file
+#(i just copied it - it was easier to to cntrl+f "gene name" as it made it easy to just copy and paste into a new file)
 #once done, use the VCFs and this new .bed file to create a new VCF with only these gene positions in:
 vcftools --gzvcf ~/Documents/chag_vcfs/chr3.noRB.vcf.gz --bed ~/Documents/traip.bed --out ~/Documents/traip_chr3_chag --recode --keep-INFO-all
 
